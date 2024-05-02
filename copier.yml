@@ -1,0 +1,88 @@
+project_type:
+    type: str
+    help: What kind of project is it?
+    choices:
+        - .NET Library
+        - Cake Addin
+
+addin_name:
+    type: str
+    help: What's the name of the Cake Addin? (omit the "Cake" prefix)
+    default: ''
+    when: "{{ project_type == 'Cake Addin' }}"  
+
+project_name:
+    type: str
+    help: What's the name of the project? 
+    when: "{{ project_type == '.NET Library' }}"
+    default: |-
+        {% if project_type == 'Cake Addin' -%}
+            Cake.{{addin_name}}
+        {%- endif %}
+
+repository_name:
+    type: str
+    help: What's the name of the repository for the project?
+    default: |-
+        {% if project_type == 'Cake Addin' -%}
+            {{ project_name }}        
+        {%- else -%}
+            {{ project_name.replace(".", "-").lower() }}
+        {%- endif %}
+
+target_frameworks:
+    type: str
+    help: Which versions of .NET should the project target?
+    default: |-
+        {% if project_type == 'Cake Addin' -%}
+            net6.0;net7.0;net8.0
+        {%- else -%}
+            net8.0
+        {%- endif %}
+
+author:
+    type: str
+    help: Please enter the package author. This will be included in the NuGet package metadata
+    default: Andreas Gruenwald
+
+
+github_org:
+    type: str
+    help: What't the GitHUb org name that will host the repository?
+    default: |-
+        {% if author == 'Andreas Gruenwald' -%}
+            ap0llo
+        {%- endif %}
+
+package_repository_url:
+    type: str
+    help: What's the repository url to include in the NuGet package metadata?
+    default: https://github.com/{{github_org}}/{{repository_name}}
+
+
+_tasks:
+    - "dotnet sln {{project_name}}.sln add build/workflow/{{repository_name}}.Build.csproj"
+    - "dotnet sln {{project_name}}.sln add src/{{project_name}}/{{project_name}}.csproj"
+    - "dotnet sln {{project_name}}.sln add test/{{project_name}}.Test/{{project_name}}.Test.csproj"
+
+_message_after_copy: |
+
+    =====================================================================================================
+
+    Project was created successfully.
+
+    IMPORTANT: 
+       The build project at build/workflow/{{repository_name}}.Build.csproj was added to the Visual Studio solution file.
+       Don't forget to exclude it from building in the configuration manager
+
+    Next steps:
+        - Initialize a Git repository an commit the generated files
+        {%- if project_type == 'Cake Addin' %}
+        - An empty README file that will be included in the addin's NuGet package was created at src\{{project_name}}\package\README.md
+          Please update it with information about the addin.
+        {%- endif %}
+        - An repository README file was created at README.adoc.
+          Please update it with information about the addin.
+        - To publish the addin NuGet package, adjust the settings in 'build/workflow/Program.cs'
+          
+    =====================================================================================================
