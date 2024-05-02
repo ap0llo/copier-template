@@ -48,7 +48,7 @@ author:
 
 github_org:
     type: str
-    help: What't the GitHUb org name that will host the repository?
+    help: What't the GitHub org name that will host the repository?
     default: |-
         {% if author == 'Andreas Gruenwald' -%}
             ap0llo
