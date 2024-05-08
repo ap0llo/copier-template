@@ -76,7 +76,7 @@ _message_after_copy: |
        Don't forget to exclude it from building in the configuration manager
 
     Next steps:
-        - Initialize a Git repository an commit the generated files
+        - Initialize a Git repository and commit the generated files
         {%- if project_type == 'Cake Addin' %}
         - An empty README file that will be included in the addin's NuGet package was created at src\{{project_name}}\package\README.md
           Please update it with information about the addin.
