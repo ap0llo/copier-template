@@ -6,6 +6,7 @@
   {%- else %}
     <TargetFramework>{{ target_frameworks }}</TargetFramework>
   {%- endif %}
+     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   {% if project_type == 'Cake Addin' -%}
