@@ -40,6 +40,11 @@ target_frameworks:
             net8.0
         {%- endif %}
 
+test_validate_public_api:
+    type: bool
+    help: Add test for approval of API changes? (Based on Verify and PublicApiGenerator)
+    default: false
+
 author:
     type: str
     help: Please enter the package author. This will be included in the NuGet package metadata
